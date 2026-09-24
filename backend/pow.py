@@ -23,7 +23,6 @@ from .config import (
     DIFFICULTY_ADJUST_MAX_FACTOR,
     DIFFICULTY_ADJUST_MIN_FACTOR,
     DIFFICULTY_SERIES_TAIL_DROP,
-    HASHRATE_SMOOTH_WINDOW,
     TARGET_BLOCK_TIME,
 )
 
@@ -143,8 +142,12 @@ def difficulty_series(chain, tail_drop=DIFFICULTY_SERIES_TAIL_DROP):
     ]
 
 
-def effective_hashrate(attempts, elapsed, window=HASHRATE_SMOOTH_WINDOW):
-    """Reported hashing rate for the dashboard."""
+def effective_hashrate(attempts, elapsed):
+    """Reported hashing rate for the dashboard.
+
+    The true rate of the most recent block is simply the number of hashes
+    attempted divided by the time spent mining it.
+    """
     if elapsed <= 0:
         return 0.0
-    return attempts / (elapsed * window)
+    return attempts / elapsed
